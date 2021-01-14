@@ -1,4 +1,4 @@
-const fruits = [
+let fruits = [
     {id: 1, title: 'Apple', price: 20, img: "https://sc04.alicdn.com/kf/UTB8ou8hOyDEXKJk43Oqq6Az3XXaz.jpg"},
     {id: 2, title: 'Orange', price: 30, img: "https://5.imimg.com/data5/VN/YP/MY-33296037/orange-600x600-500x500.jpg"},
     {id: 3, title: 'Mango', price: 40, img: "https://st.depositphotos.com/1642482/3698/i/600/depositphotos_36983317-stock-photo-mango.jpg"}
@@ -34,36 +34,30 @@ const priceModal = $.modal({
                 priceModal.close()
         }}
     ]
-
 })
 
-// const confirmModal = $.modal({
-//     title: 'Are you sure?',
-//     closable: true,
-//     width: '400px',
-//     footerButtons: [
-//         {text: 'Yes', type: 'danger', handler() {
-//                 confirmModal.close()
-//         }},
-//         {text: 'Cancel', type: 'primary', handler() {
-//                 confirmModal.close()
-//         }}
-//     ]
-//
-// })
 
 document.addEventListener('click', event => {
     event.preventDefault()
     const btnType = event.target.dataset.btn
     const fruitId = Number(event.target.dataset.id)
+    const fruit = fruits.find(f => f.id === fruitId)
+
     if (btnType === 'price') {
-        const fruit = fruits.find(f => f.id === fruitId)
         priceModal.setContent(`${fruit.title} price is ${fruit.price}$`)
         priceModal.open()
     } else if (btnType ==='delete') {
-        // const fruit = fruits.find(f => f.id === fruitId)
-        // confirmModal.setContent(`Do you want delete ${fruit.title}?`)
-        // confirmModal.open()
+        $.confirm({
+            title: 'Are you sure?',
+            content: `<p>Delete ${fruit.title}?</p>`,
+        }).then(() => {
+            console.log('Delete')
+            fruits = fruits.filter( f => f.id !== fruit.id)
+            render()
+        }).catch(() => {
+            console.log('Cancel')
+        })
+
     }
 })
 
